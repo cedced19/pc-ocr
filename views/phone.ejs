@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>PC-OCR | <%=translation.HOME_PAGE %></title>
+    <link rel='stylesheet' href='/stylesheets/style.css' />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  </head>
+  <body>
+    <h1>PC-OCR</h1>
+    <p><%=translation.WELCOME_MSG %> PC-OCR.</p>
+
+    <form action="/files/new" method="post" enctype="multipart/form-data">
+         <label for="file"><%=translation.PHOTO %>: <span id="photo-selected" style="display: none"><%=translation.PHOTO_SELECTED %></span></label>
+         <label class="btn btn-file">
+           <%=translation.TAKE_A_PHOTO %> <input type="file" id="file-input" accept="image/*" capture="camera">
+         </label>
+         <br>
+         <input type="submit" class="btn btn-submit" value="<%=translation.SUBMIT %>">
+    </form>
+    <script type="text/javascript">
+      document.getElementById('file-input').addEventListener('change', function () {
+        document.getElementById('photo-selected').style.display = 'inline-block';
+      });
+
+      // http://blog.marcon.me/post/31143865164/send-images-through-websockets
+    </script>
+  </body>
+</html>
