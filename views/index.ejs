@@ -12,12 +12,14 @@
     <p><%=address %>/phone/<%=id %></p>
     <script src="/socket.io/socket.io.js"></script>
     <script type="text/javascript">
-      (function () {
         var id = window.location.href.substr(window.location.href.lastIndexOf('/') + 1);
         var socket = io.connect();
 
         socket.emit('login', { id: id, type: 'computer' });
-      })();
+
+        socket.on('connected', function () {
+          console.log('connected');
+        });
     </script>
   </body>
 </html>

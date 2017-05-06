@@ -25,6 +25,9 @@
       var socket = io.connect();
       socket.emit('login', { id: id, type: 'phone' });
 
+      socket.on('connected', function () {
+        console.log('connected');
+      })
       document.getElementById('file-input').addEventListener('change', function (e) {
         document.getElementById('photo-selected').style.display = 'inline-block';
 

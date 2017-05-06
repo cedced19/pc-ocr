@@ -5,8 +5,26 @@ var getObject = function(array, roomId, cb) {
     }
   }
   cb(false);
-}
+};
 
+var getOtherId = function (object, type, cb) {
+  if (type == 'computer' && object.hasOwnProperty('phone')) {
+    cb(object.phone);
+  }
+  if (type == 'phone' && object.hasOwnProperty('computer')) {
+    cb(object.computer);
+  }
+};
+
+var sendMessageToOther = function (rooms, user, messageName, messageContent) {
+  getObject(rooms, user.roomId, (result) => {
+    if (result === false) return false;
+    getOtherId(rooms[result], user.type, (id) => {
+      if (!messageContent) messageContent = {};
+      io.sockets.connected[id].emit(messageName, messageContent)
+    });
+  });
+};
 
 module.exports = function (io) {
   var rooms = [];
@@ -16,23 +34,24 @@ module.exports = function (io) {
       user.roomId = data.id;
       user.type = data.type;
       socket.join(user.roomId);
+      // Save socket session in a couple pc/phone
       getObject(rooms, user.roomId, function (result) {
         if (result === false) {
-          var room = {id: user.roomId};
-          if (user.type == 'computer') {
-            room.computer = socket.id;
-          } else {
-            room.phone = socket.id;
-          }
-          rooms.push(room);
-        } else {
-          if (user.type == 'computer') {
-            rooms[result].computer = socket.id;
-          } else {
-            rooms[result].phone = socket.id;
-          }
+          result = rooms.push({id: user.roomId}) - 1;
         }
+        if (user.type == 'computer') {
+          rooms[result].computer = socket.id;
+        } else {
+          rooms[result].phone = socket.id;
+        }
+        getOtherId(rooms[result], user.type, function (id) {
+          io.sockets.connected[id].emit('connected');
+        });
       });
     });
+
+    socket.on('image', function (data) {
+    //sendMessageToOther(rooms, user, 'converted');
+    });
   }
-}
+};
