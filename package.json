@@ -4,8 +4,7 @@
   "description": "A website to use an OCR on an image from the phone, and get the result on the pc. ",
   "main": "index.js",
   "scripts": {
-    "start": "node bin/pc-ocr",
-    "train-ocr": "node ocr/train.js"
+    "start": "node bin/pc-ocr"
   },
   "repository": {
     "type": "git",

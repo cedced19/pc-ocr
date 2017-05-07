@@ -3,10 +3,10 @@ A website to use an OCR on an image from the phone, and get the result on the pc
 
 To use the QR-Code you need to define the address in the `config.json` file.
 ```json
-{"adress": "example.com"}
+{
+  "adress": "example.com",
+  "https": false
+}
 ```
 
-You have to train the OCR with the following command:
-```bash
-npm run train-ocr
-```
+pc-ocr use [node-tika](https://github.com/ICIJ/node-tika), it **requires**  JDK 7 and [Tesseract](https://wiki.apache.org/tika/TikaOCR).

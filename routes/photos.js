@@ -23,18 +23,14 @@ router.post('/', upload.single('file'), function(req, res, next) {
       });
 });
 
-var getPhotoType = function (dir) {
-   return function (req, res, next) {
-     var p = path.join(__dirname, '../uploads', dir, req.params.id);
-     tika.type(p, function(err, result) {
-       if (err) next(err);
-       res.setHeader('Content-Type', result);
-       fs.createReadStream(p).pipe(res);
-     });
-   };
-};
-
-router.use('/raw/:id', getPhotoType('raw'));
-router.use('/cropped/:id', getPhotoType('cropped'));
+/* GET raw image */
+router.get('/raw/:id', function (req, res, next) {
+  var p = path.join(__dirname, '../uploads/raw', req.params.id);
+  tika.type(p, function(err, result) {
+    if (err) next(err);
+    res.setHeader('Content-Type', result);
+    fs.createReadStream(p).pipe(res);
+  });
+});
 
 module.exports = router;

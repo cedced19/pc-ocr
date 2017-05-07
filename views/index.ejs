@@ -3,6 +3,7 @@
   <head>
     <title>PC-OCR | <%=translation.HOME_PAGE %></title>
     <link rel='stylesheet' href='/stylesheets/style.css' />
+    <link rel='stylesheet' href='/stylesheets/cropper.css' />
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
   </head>
   <body>
@@ -11,12 +12,18 @@
     <p class="info-box" style="display: none" id="connected"><%=translation.CONNECTED_MSG_PC %></p>
     <img src="/api/qr-code/<%=id %>" alt="QR-Code">
     <p><%=address %>/phone/<%=id %></p>
-    <img id="img" width="80%" style="display: none">
+    <div id="buttons" class="buttons">
+      <a class="btn" id="rotate">Rotate</a>
+      <a class="btn" id="convert">Convert</a>
+    </div>
+    <div id="cropper-container">
+    </div>
     <script src="/socket.io/socket.io.js"></script>
+    <script src="/javascripts/cropper.js"></script>
     <script type="text/javascript">
         var id = window.location.href.substr(window.location.href.lastIndexOf('/') + 1);
         var socket = io.connect();
-        var img = document.getElementById('img');
+        var cropperContainer = document.getElementById('cropper-container');
         var connectedInfo = document.getElementById('connected');
 
         socket.emit('login', { id: id, type: 'computer' });
@@ -38,8 +45,39 @@
         });
 
         socket.on('image-uploaded', function (data) {
+          while (cropperContainer.firstChild) {
+            cropperContainer.removeChild(cropperContainer.firstChild);
+          }
+
+          var imgContainer = document.createElement('div');
+          var img = document.createElement('img');
+          imgContainer.appendChild(img);
+          imgContainer.style.height = '500px';
+          imgContainer.style.width = '50%';
+          cropperContainer.appendChild(imgContainer);
+
           img.src = '/api/photos/raw/' + id + '?' + (new Date()).getTime();
-          img.style.display = 'block';
+          var cropper = new Cropper(img, {});
+
+          document.getElementById('rotate').onclick = function () {
+              cropper.rotate(90);
+          };
+
+          document.getElementById('convert').onclick = function () {
+              cropper.getCroppedCanvas().toBlob(function (blob) {
+                var xhr = new XMLHttpRequest();
+                xhr.open('POST', '/api/photos');
+                xhr.addEventListener('load', function() {
+                  socket.emit('cropped-image-uploaded')
+                });
+                var form = new FormData();
+                form.append('room', id);
+                form.append('type', 'cropped');
+                form.append('file', blob);
+                xhr.send(form);
+            });
+          };
+
         });
     </script>
   </body>

@@ -1,3 +1,7 @@
+var fs = require('fs');
+var tika = require('tika');
+var path = require('path');
+
 var getOtherId = function (object, type, cb) {
   if (type == 'computer' && object.hasOwnProperty('phone')) {
     cb(object.phone);
@@ -54,6 +58,18 @@ module.exports = function (io) {
 
     socket.on('image-uploaded', function (data) {
       sendMessageToOther(user, 'image-uploaded');
+    });
+
+    socket.on('cropped-image-uploaded', function (data) {
+      sendMessageToOther(user, 'cropped-image-uploaded');
+      var p = path.join(__dirname, '../uploads/cropped', user.roomId);
+      tika.type(p, function(err, result) {
+        if (err) console.log(err);
+        tika.text(p, {contentType: result, ocrLanguage: 'fra'}, function(err, text) {
+        	console.log(err, text);
+          // TODO: send OCR's result to pc
+        });
+      });
     });
 
     socket.on('disconnect', function () {
