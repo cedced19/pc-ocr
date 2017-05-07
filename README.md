@@ -5,3 +5,8 @@ To use the QR-Code you need to define the address in the `config.json` file.
 ```json
 {"adress": "example.com"}
 ```
+
+You have to train the OCR with the following command:
+```bash
+npm run train-ocr
+```

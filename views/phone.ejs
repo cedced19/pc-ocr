@@ -12,43 +12,30 @@
     <form action="/files/new" method="post" enctype="multipart/form-data">
          <label for="file"><%=translation.PHOTO %>: <span id="photo-selected" style="display: none"><%=translation.PHOTO_SELECTED %></span></label>
          <label class="btn btn-file">
-           <%=translation.TAKE_A_PHOTO %> <input type="file" id="file-input" accept="image/*" capture="camera">
+           <%=translation.SELECT_A_PHOTO %> <input type="file" id="file-input" accept="image/*">
          </label>
-         <!--
-         <br>
-         <input type="submit" class="btn btn-submit" value="<%=translation.SUBMIT %>">
-         //-->
     </form>
     <script src="/socket.io/socket.io.js"></script>
     <script type="text/javascript">
       var id = window.location.href.substr(window.location.href.lastIndexOf('/') + 1);
       var socket = io.connect();
       socket.emit('login', { id: id, type: 'phone' });
-
       socket.on('connected', function () {
         console.log('connected');
       })
       document.getElementById('file-input').addEventListener('change', function (e) {
         document.getElementById('photo-selected').style.display = 'inline-block';
-
           var xhr = new XMLHttpRequest();
-
           xhr.open('POST', '/api/photos');
-
           xhr.addEventListener('load', function() {
               socket.emit('image-uploaded')
           });
-
           var form = new FormData();
           form.append('room', id);
           form.append('type', 'raw');
           form.append('file', e.target.files[0]);
-
           xhr.send(form);
-
       });
-
-      // http://blog.marcon.me/post/31143865164/send-images-through-websockets
     </script>
   </body>
 </html>

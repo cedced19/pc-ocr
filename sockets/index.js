@@ -1,12 +1,3 @@
-var getObject = function(array, roomId, cb) {
-  for(var i in array) {
-    if (array[i].id == roomId) {
-      return cb(i);
-    }
-  }
-  cb(false);
-};
-
 var getOtherId = function (object, type, cb) {
   if (type == 'computer' && object.hasOwnProperty('phone')) {
     cb(object.phone);
@@ -19,8 +10,17 @@ var getOtherId = function (object, type, cb) {
 module.exports = function (io) {
   var rooms = [];
 
+  var getRoom = function(roomId, cb) {
+    for(var i in rooms) {
+      if (rooms[i].id == roomId) {
+        return cb(i);
+      }
+    }
+    cb(false);
+  };
+
   var sendMessageToOther = function (user, messageName, messageContent) {
-    getObject(rooms, user.roomId, (result) => {
+    getRoom(user.roomId, (result) => {
       if (result === false) return false;
       getOtherId(rooms[result], user.type, (id) => {
         if (!messageContent) messageContent = {};
@@ -36,7 +36,7 @@ module.exports = function (io) {
       user.type = data.type;
       socket.join(user.roomId);
       // Save socket session in a couple pc/phone
-      getObject(rooms, user.roomId, function (result) {
+      getRoom(user.roomId, function (result) {
         if (result === false) {
           result = rooms.push({id: user.roomId}) - 1;
         }
@@ -45,6 +45,7 @@ module.exports = function (io) {
         } else {
           rooms[result].phone = socket.id;
         }
+        socket.emit('room', rooms[result]);
         getOtherId(rooms[result], user.type, function (id) {
           io.sockets.connected[id].emit('connected');
         });
@@ -53,6 +54,19 @@ module.exports = function (io) {
 
     socket.on('image-uploaded', function (data) {
       sendMessageToOther(user, 'image-uploaded');
+    });
+
+    socket.on('disconnect', function () {
+      io.emit('user-disconnected', user.roomId);
+      getRoom(user.roomId, (result) => {
+        if (result === false) return false;
+        if (user.type == 'computer') {
+          delete rooms[result].computer;
+        } else {
+          delete rooms[result].phone;
+        }
+        // TODO: Delete file on disconnect and remove room
+      });
     });
 
   }

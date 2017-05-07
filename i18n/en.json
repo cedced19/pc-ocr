@@ -2,9 +2,10 @@
   "WELCOME_MSG": "Welcome to",
   "ERROR": "Error",
   "HOME_PAGE": "Home page",
-  "TAKE_A_PHOTO": "Take a photo",
   "SUBMIT": "Submit",
   "PHOTO_SELECTED": "Photo selected",
   "PHOTO": "Photo",
-  "ADVICE": "Use your phone to take a picture, the synchronization will be done automatically with the QR-Code or the following link."
+  "ADVICE": "Use your phone to take a picture, the synchronization will be done automatically with the QR-Code or the following link.",
+  "CONNECTED_MSG_PC": "The phone is connected.",
+  "SELECT_A_PHOTO": "Select a photo"
 }

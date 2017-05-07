@@ -8,22 +8,38 @@
   <body>
     <h1>PC-OCR</h1>
     <p><%=translation.WELCOME_MSG %> PC-OCR.<br><%=translation.ADVICE %></p>
+    <p class="info-box" style="display: none" id="connected"><%=translation.CONNECTED_MSG_PC %></p>
     <img src="/api/qr-code/<%=id %>" alt="QR-Code">
     <p><%=address %>/phone/<%=id %></p>
-    <img id="img" >
+    <img id="img" width="80%" style="display: none">
     <script src="/socket.io/socket.io.js"></script>
     <script type="text/javascript">
         var id = window.location.href.substr(window.location.href.lastIndexOf('/') + 1);
         var socket = io.connect();
+        var img = document.getElementById('img');
+        var connectedInfo = document.getElementById('connected');
 
         socket.emit('login', { id: id, type: 'computer' });
 
         socket.on('connected', function () {
-          console.log('connected');
+          connectedInfo.style.display = 'block';
+        });
+
+        socket.on('room', function (data) {
+          if (data.hasOwnProperty('phone')) {
+            connectedInfo.style.display = 'block';
+          }
+        });
+
+        socket.on('user-disconnected', function (data) {
+          if (data == id) {
+            connectedInfo.style.display = 'none';
+          }
         });
 
         socket.on('image-uploaded', function (data) {
-          document.getElementById('img').src = '/api/photos/raw/' + id;
+          img.src = '/api/photos/raw/' + id + '?' + (new Date()).getTime();
+          img.style.display = 'block';
         });
     </script>
   </body>
