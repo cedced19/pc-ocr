@@ -1,1 +1,5 @@
 node_modules/
+uploads/raw/*
+!uploads/raw/.gitkeep
+uploads/cropped/*
+!uploads/cropped/.gitkeep

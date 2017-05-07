@@ -31,12 +31,21 @@
       document.getElementById('file-input').addEventListener('change', function (e) {
         document.getElementById('photo-selected').style.display = 'inline-block';
 
-        var file = e.target.files[0];
-        var reader = new FileReader();
-        reader.onload = function (evt) {
-          socket.emit('image', evt.target.result)
-        };
-        reader.readAsDataURL(file);
+          var xhr = new XMLHttpRequest();
+
+          xhr.open('POST', '/api/photos');
+
+          xhr.addEventListener('load', function() {
+              socket.emit('image-uploaded')
+          });
+
+          var form = new FormData();
+          form.append('room', id);
+          form.append('type', 'raw');
+          form.append('file', e.target.files[0]);
+
+          xhr.send(form);
+
       });
 
       // http://blog.marcon.me/post/31143865164/send-images-through-websockets

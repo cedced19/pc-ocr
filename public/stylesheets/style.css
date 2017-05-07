@@ -137,3 +137,7 @@ td a {
   background-color: #6cb0de;
   color: #0c1721;
 }
+
+img {
+    image-orientation: from-image;
+}

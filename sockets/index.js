@@ -16,18 +16,19 @@ var getOtherId = function (object, type, cb) {
   }
 };
 
-var sendMessageToOther = function (rooms, user, messageName, messageContent) {
-  getObject(rooms, user.roomId, (result) => {
-    if (result === false) return false;
-    getOtherId(rooms[result], user.type, (id) => {
-      if (!messageContent) messageContent = {};
-      io.sockets.connected[id].emit(messageName, messageContent)
-    });
-  });
-};
-
 module.exports = function (io) {
   var rooms = [];
+
+  var sendMessageToOther = function (user, messageName, messageContent) {
+    getObject(rooms, user.roomId, (result) => {
+      if (result === false) return false;
+      getOtherId(rooms[result], user.type, (id) => {
+        if (!messageContent) messageContent = {};
+        io.sockets.connected[id].emit(messageName, messageContent)
+      });
+    });
+  };
+
   return function (socket) {
     var user = {};
     socket.on('login', function (data) {
@@ -50,8 +51,9 @@ module.exports = function (io) {
       });
     });
 
-    socket.on('image', function (data) {
-    //sendMessageToOther(rooms, user, 'converted');
+    socket.on('image-uploaded', function (data) {
+      sendMessageToOther(user, 'image-uploaded');
     });
+
   }
 };

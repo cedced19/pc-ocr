@@ -11,6 +11,7 @@ var helmet = require('helmet');
 
 var index = require('./routes/index');
 var QRCode = require('./routes/qr-code');
+var photos = require('./routes/photos');
 var app = express();
 
 // view engine setup
@@ -41,6 +42,7 @@ app.use(helmet());
 
 app.use('/', index);
 app.use('/api/qr-code', QRCode);
+app.use('/api/photos', photos);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
