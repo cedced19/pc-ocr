@@ -12,9 +12,9 @@
     <p class="info-box" style="display: none" id="connected"><%=translation.CONNECTED_MSG_PC %></p>
     <img src="/api/qr-code/<%=id %>" alt="QR-Code">
     <p><%=address %>/phone/<%=id %></p>
-    <div id="buttons" class="buttons">
-      <a class="btn" id="rotate">Rotate</a>
-      <a class="btn" id="convert">Convert</a>
+    <div class="buttons">
+      <a class="btn" id="rotate" style="display: none;"><%=translation.ROTATE %></a>
+      <a class="btn" id="convert" style="display: none;"><%=translation.CONVERT %></a>
     </div>
     <div id="cropper-container">
     </div>
@@ -25,6 +25,8 @@
         var socket = io.connect();
         var cropperContainer = document.getElementById('cropper-container');
         var connectedInfo = document.getElementById('connected');
+        var rotateBtn = document.getElementById('rotate');
+        var convertBtn = document.getElementById('convert');
 
         socket.emit('login', { id: id, type: 'computer' });
 
@@ -59,16 +61,18 @@
           img.src = '/api/photos/raw/' + id + '?' + (new Date()).getTime();
           var cropper = new Cropper(img, {});
 
-          document.getElementById('rotate').onclick = function () {
+          rotateBtn.style.display = 'inline-block';
+          rotateBtn.onclick = function () {
               cropper.rotate(90);
           };
 
-          document.getElementById('convert').onclick = function () {
+          convertBtn.style.display = 'inline-block';
+          convertBtn.onclick = function () {
               cropper.getCroppedCanvas().toBlob(function (blob) {
                 var xhr = new XMLHttpRequest();
                 xhr.open('POST', '/api/photos');
                 xhr.addEventListener('load', function() {
-                  socket.emit('cropped-image-uploaded')
+                  socket.emit('cropped-image-uploaded');
                 });
                 var form = new FormData();
                 form.append('room', id);
