@@ -22,6 +22,7 @@
     </div>
     <div id="cropper-container">
     </div>
+    <pre id="content"></pre>
     <script src="/socket.io/socket.io.js"></script>
     <script src="/javascripts/cropper.js"></script>
     <script type="text/javascript">
@@ -31,6 +32,7 @@
         var connectedInfo = document.getElementById('connected');
         var rotateBtn = document.getElementById('rotate');
         var convertBtn = document.getElementById('convert');
+        var contentBox = document.getElementById('content');
 
         socket.emit('login', { id: id, type: 'computer' });
 
@@ -103,6 +105,10 @@
         });
 
         socket.on('image-uploaded', select);
+
+        socket.on('text-converted', function (data) {
+           contentBox.innerHTML = data.text;
+        });
     </script>
   </body>
 </html>

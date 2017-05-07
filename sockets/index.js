@@ -66,8 +66,9 @@ module.exports = function (io) {
       tika.type(p, function(err, result) {
         if (err) console.log(err);
         tika.text(p, {contentType: result, ocrLanguage: 'fra'}, function(err, text) {
-        	console.log(err, text);
-          // TODO: send OCR's result to pc
+        	if (err) console.log(err);
+          socket.emit('text-converted', {text: text});
+          // TODO: catch errors
         });
       });
     });
