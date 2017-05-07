@@ -10,6 +10,7 @@
     <h1>PC-OCR</h1>
     <p><%=translation.WELCOME_MSG %> PC-OCR.<br><%=translation.ADVICE %></p>
     <p class="info-box" style="display: none" id="connected"><%=translation.CONNECTED_MSG_PC %></p>
+    <p class="error-box" style="display: none" id="parsing-error"><%=translation.PARSING_ERROR %></p>
     <img src="/api/qr-code/<%=id %>" alt="QR-Code">
     <p><%=address %>/phone/<%=id %></p>
     <div class="buttons">
@@ -20,8 +21,7 @@
       <a class="btn" id="rotate" style="display: none;"><%=translation.ROTATE %></a>
       <a class="btn" id="convert" style="display: none;"><%=translation.CONVERT %></a>
     </div>
-    <div id="cropper-container">
-    </div>
+    <div id="cropper-container"></div>
     <pre id="content"></pre>
     <script src="/socket.io/socket.io.js"></script>
     <script src="/javascripts/cropper.js"></script>
@@ -33,11 +33,16 @@
         var rotateBtn = document.getElementById('rotate');
         var convertBtn = document.getElementById('convert');
         var contentBox = document.getElementById('content');
+        var parsingErrorBox = document.getElementById('parsing-error');
 
         socket.emit('login', { id: id, type: 'computer' });
 
         socket.on('connected', function () {
           connectedInfo.style.display = 'block';
+        });
+
+        socket.on('error-parsing-text', function () {
+          parsingError.style.display = 'block';
         });
 
         socket.on('room', function (data) {
@@ -53,6 +58,8 @@
         });
 
         var select = function (data) {
+          parsingError.style.display = 'none';
+
           while (cropperContainer.firstChild) {
             cropperContainer.removeChild(cropperContainer.firstChild);
           }

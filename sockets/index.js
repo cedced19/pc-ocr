@@ -64,11 +64,10 @@ module.exports = function (io) {
       sendMessageToOther(user, 'cropped-image-uploaded');
       var p = path.join(__dirname, '../uploads/cropped', user.roomId);
       tika.type(p, function(err, result) {
-        if (err) console.log(err);
+        if (err) return socket.emit('error-parsing-text', err);
         tika.text(p, {contentType: result, ocrLanguage: 'fra'}, function(err, text) {
-        	if (err) console.log(err);
+        	if (err) return socket.emit('error-parsing-text', err);
           socket.emit('text-converted', {text: text});
-          // TODO: catch errors
         });
       });
     });

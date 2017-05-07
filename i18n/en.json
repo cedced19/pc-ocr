@@ -9,5 +9,6 @@
   "CONNECTED_MSG_PC": "The phone is connected.",
   "SELECT_A_PHOTO": "Select a photo",
   "ROTATE": "Rotate",
-  "CONVERT": "Convert"
+  "CONVERT": "Convert",
+  "PARSING_ERROR": "Error during conversion."
 }
