@@ -13,6 +13,10 @@
     <img src="/api/qr-code/<%=id %>" alt="QR-Code">
     <p><%=address %>/phone/<%=id %></p>
     <div class="buttons">
+      <label class="btn btn-file">
+        <%=translation.SELECT_A_PHOTO %> <input type="file" id="file-input" accept="image/*">
+      </label>
+      <br>
       <a class="btn" id="rotate" style="display: none;"><%=translation.ROTATE %></a>
       <a class="btn" id="convert" style="display: none;"><%=translation.CONVERT %></a>
     </div>
@@ -46,7 +50,7 @@
           }
         });
 
-        socket.on('image-uploaded', function (data) {
+        var select = function (data) {
           while (cropperContainer.firstChild) {
             cropperContainer.removeChild(cropperContainer.firstChild);
           }
@@ -58,7 +62,12 @@
           imgContainer.style.width = '50%';
           cropperContainer.appendChild(imgContainer);
 
-          img.src = '/api/photos/raw/' + id + '?' + (new Date()).getTime();
+          if (data.hasOwnProperty('base64')) {
+            img.src = data.base64;
+          } else {
+            img.src = '/api/photos/raw/' + id + '?' + (new Date()).getTime();
+          }
+
           var cropper = new Cropper(img, {});
 
           rotateBtn.style.display = 'inline-block';
@@ -82,7 +91,18 @@
             });
           };
 
+        };
+
+        document.getElementById('file-input').addEventListener('change', function (e) {
+           var file = e.target.files[0],
+           reader = new FileReader();
+           reader.onload = function(evt){
+                select({base64: evt.target.result});
+           };
+           reader.readAsDataURL(file);
         });
+
+        socket.on('image-uploaded', select);
     </script>
   </body>
 </html>
