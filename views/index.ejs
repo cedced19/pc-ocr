@@ -42,7 +42,7 @@
         });
 
         socket.on('error-parsing-text', function () {
-          parsingError.style.display = 'block';
+          parsingErrorBox.style.display = 'block';
         });
 
         socket.on('room', function (data) {
@@ -58,7 +58,7 @@
         });
 
         var select = function (data) {
-          parsingError.style.display = 'none';
+          parsingErrorBox.style.display = 'none';
 
           while (cropperContainer.firstChild) {
             cropperContainer.removeChild(cropperContainer.firstChild);

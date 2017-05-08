@@ -7,6 +7,7 @@
   "PHOTO": "Photo",
   "ADVICE": "Use your phone to take a picture, the synchronization will be done automatically with the QR-Code or the following link.",
   "CONNECTED_MSG_PC": "The phone is connected.",
+  "CONNECTED_MSG_PHONE": "You are connected to the computer",
   "SELECT_A_PHOTO": "Select a photo",
   "ROTATE": "Rotate",
   "CONVERT": "Convert",
