@@ -1,6 +1,7 @@
 var fs = require('fs');
 var tika = require('tika');
 var path = require('path');
+var existsFile = require('exists-file');
 
 var getOtherId = function (object, type, cb) {
   if (type == 'computer' && object.hasOwnProperty('phone')) {
@@ -9,6 +10,14 @@ var getOtherId = function (object, type, cb) {
   if (type == 'phone' && object.hasOwnProperty('computer')) {
     cb(object.computer);
   }
+};
+
+var deleteFile = function(p) {
+ existsFile(p, function (err, exist) {
+   if (exist) {
+     fs.unlink(p);
+   }
+ });
 };
 
 module.exports = function (io) {
@@ -81,7 +90,11 @@ module.exports = function (io) {
         } else {
           delete rooms[result].phone;
         }
-        // TODO: Delete file on disconnect and remove room
+        if (!rooms[result].hasOwnProperty('phone') && !rooms[result].hasOwnProperty('phone')) {
+          deleteFile(path.join(__dirname, '../uploads/raw', user.roomId));
+          deleteFile(path.join(__dirname, '../uploads/cropped', user.roomId));
+          rooms.splice(result, 1);
+        }
       });
     });
 
