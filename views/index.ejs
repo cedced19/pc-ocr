@@ -35,6 +35,18 @@
         var contentBox = document.getElementById('content');
         var parsingErrorBox = document.getElementById('parsing-error');
 
+        var getLanguagePack = function () {
+          // TODO: Get languages array from server config
+          var languages = [{re: 'fr', pack: 'fra'}]
+          for (var i in languages) {
+            var re = new RegExp(languages[i].re,'g');
+            if (re.test(navigator.language || navigator.userLanguage)) {
+              return languages[i].pack;
+            }
+          }
+          return 'eng';
+        };
+
         socket.emit('login', { id: id, type: 'computer' });
 
         socket.on('connected', function () {
@@ -90,7 +102,7 @@
                 var xhr = new XMLHttpRequest();
                 xhr.open('POST', '/api/photos');
                 xhr.addEventListener('load', function() {
-                  socket.emit('cropped-image-uploaded');
+                  socket.emit('cropped-image-uploaded', {lang: getLanguagePack()});
                 });
                 var form = new FormData();
                 form.append('room', id);

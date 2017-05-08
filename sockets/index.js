@@ -65,7 +65,7 @@ module.exports = function (io) {
       var p = path.join(__dirname, '../uploads/cropped', user.roomId);
       tika.type(p, function(err, result) {
         if (err) return socket.emit('error-parsing-text', err);
-        tika.text(p, {contentType: result, ocrLanguage: 'fra'}, function(err, text) {
+        tika.text(p, {contentType: result, ocrLanguage: (data.lang || 'eng')}, function(err, text) {
         	if (err) return socket.emit('error-parsing-text', err);
           socket.emit('text-converted', {text: text});
         });

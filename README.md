@@ -10,3 +10,4 @@ To use the QR-Code you need to define the address in the `config.json` file.
 ```
 
 pc-ocr use [node-tika](https://github.com/ICIJ/node-tika), it **requires**  JDK 7 and [Tesseract](https://wiki.apache.org/tika/TikaOCR).
+You will have to download language packs for your language.
