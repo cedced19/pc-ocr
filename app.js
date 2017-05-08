@@ -6,6 +6,8 @@ var bodyParser = require('body-parser');
 var cookieParser = require('cookie-parser');
 var i18n = require('i18n-express');
 var compression = require('compression');
+var minifyTemplate = require('express-beautify').minify;
+var minifyCSS = require('express-minify');
 
 var helmet = require('helmet');
 
@@ -22,6 +24,8 @@ if (app.get('env') === 'development') {
   app.use(logger('dev'));
 } else {
   app.use(compression());
+  app.use(minifyTemplate());
+  app.use(minifyCSS());
 }
 
 app.use(express.static(path.join(__dirname, 'public')));

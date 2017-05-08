@@ -33,6 +33,8 @@
     "env-port": "0.0.0",
     "exists-file": "^3.0.1",
     "express": "^4.15.2",
+    "express-beautify": "^0.1.3",
+    "express-minify": "^0.2.0",
     "helmet": "^3.6.0",
     "i18n-express": "^1.1.2",
     "internal-ip": "^1.2.0",
