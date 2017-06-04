@@ -15,7 +15,7 @@ var getOtherId = function (object, type, cb) {
 var deleteFile = function(p) {
  existsFile(p, function (err, exist) {
    if (exist) {
-     fs.unlink(p);
+     fs.unlink(p, function () {});
    }
  });
 };
