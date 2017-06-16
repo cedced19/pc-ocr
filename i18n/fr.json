@@ -11,5 +11,6 @@
   "SELECT_A_PHOTO": "Séléctionner une photo",
   "ROTATE": "Tourner",
   "CONVERT": "Convertir",
-  "PARSING_ERROR": "Erreur lors de la conversion."
+  "PARSING_ERROR": "Erreur lors de la conversion.",
+  "NEW_SESSION": "Nouvelle session"
 }
